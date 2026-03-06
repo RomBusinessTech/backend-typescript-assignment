@@ -1,5 +1,5 @@
 {
-  "name": "bond-sports-backend",
+  "name": "bond-sports-backend-assignment",
   "version": "1.0.0",
   "description": "Transaction API",
   "main": "src/index.js",
