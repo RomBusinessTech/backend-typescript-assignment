@@ -58,7 +58,7 @@ export class BusinessException extends Error {
         public details?: Record<string, unknown>
     ) {
         super(message);
-        this.name = 'BusinessException';
+        Object.setPrototypeOf(this, BusinessException.prototype);
     }
 }
 

@@ -1,10 +1,12 @@
-import { Account, Person, Transaction } from '../types';
+import { Account, BusinessException, ErrorCodes, Person, Transaction } from '../types';
 
 export class Database {
     private static instance: Database;
+
     private persons: Map<number, Person> = new Map();
     private accounts: Map<number, Account> = new Map();
     private transactions: Map<number, Transaction> = new Map();
+
     private accountCounter: number = 1;
     private transactionCounter: number = 1;
     private personCounter: number = 1;
@@ -15,7 +17,7 @@ export class Database {
 
     static getInstance(): Database {
         if (!Database.instance) {
-        Database.instance = new Database();
+            Database.instance = new Database();
         }
 
         return Database.instance;
@@ -74,7 +76,16 @@ export class Database {
     }
 
     getPerson(personId: number): Person | undefined {
-        return this.persons.get(personId);
+        const person = this.persons.get(personId);
+        if (!person) {
+            throw new BusinessException(
+                ErrorCodes.PERSON_NOT_FOUND,
+                `Person with ID ${personId} not found`,
+                404
+            );
+        }
+
+        return person;
     }
 
     // Account operations
@@ -102,7 +113,16 @@ export class Database {
     }
 
     getAccount(accountId: number): Account | undefined {
-        return this.accounts.get(accountId);
+        const account = this.accounts.get(accountId);
+        if (!account) {
+            throw new BusinessException(
+                ErrorCodes.ACCOUNT_NOT_FOUND,
+                `Account with ID ${accountId} not found`,
+                404
+            );
+        }
+
+        return account;
     }
 
     getAllAccounts(): Account[] {
@@ -169,10 +189,10 @@ export class Database {
         return Array.from(this.transactions.values())
             .filter((t) => {
                 return (
-                t.accountId === accountId &&
-                t.type === 'WITHDRAWAL' &&
-                t.transactionDate >= startOfDay &&
-                t.transactionDate <= endOfDay
+                    t.accountId === accountId &&
+                    t.type === 'WITHDRAWAL' &&
+                    t.transactionDate >= startOfDay &&
+                    t.transactionDate <= endOfDay
                 );
             })
             .reduce((sum, t) => sum + t.value, 0);
