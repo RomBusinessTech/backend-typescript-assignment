@@ -1,4 +1,8 @@
 {
+  "name": "bond-sports-backend",
+  "version": "1.0.0",
+  "description": "Transaction API",
+  "main": "src/index.js",
   "scripts": {
     "dev": "ts-node src/index.ts",
     "build": "tsc",
